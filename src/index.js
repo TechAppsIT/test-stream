@@ -1,37 +1,35 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { StreamChat } from 'stream-chat';
-import { genSaltSync, hashSync } from 'bcrypt';
+const express = require("express");
+const dotenv = require("dotenv");
+const { StreamChat } = require("stream-chat");
+const { genSaltSync, hashSync } = require("bcrypt");
 
 dotenv.config();
 
-const client = StreamChat.getInstance("2m874t2tj73j", "53aj5e4w4b2jrwnbymgjcny79xphweckpcbbz72mnqjxa37jvha29cvzc44pzqvw");
+const client = StreamChat.getInstance(
+  "2m874t2tj73j",
+  "53aj5e4w4b2jrwnbymgjcny79xphweckpcbbz72mnqjxa37jvha29cvzc44pzqvw"
+);
 
 const app = express();
 app.use(express.json());
 const salt = genSaltSync(10);
 
-interface User {
-  id: string;
-  email: string;
-  hashed_password: string;
-}
-const USERS: User[] = [];
+const USERS = [];
 
 // Create user in Stream Chat
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({
-      message: 'Email and password are required.',
+      message: "Email and password are required.",
     });
   }
 
   // Minlength 6
   if (password.length < 6) {
     return res.status(400).json({
-      message: 'Password must be at least 6 characters.',
+      message: "Password must be at least 6 characters.",
     });
   }
 
@@ -39,7 +37,7 @@ app.post('/register', async (req, res) => {
 
   if (existingUser) {
     return res.status(400).json({
-      message: 'User already exists.',
+      message: "User already exists.",
     });
   }
 
@@ -73,20 +71,20 @@ app.post('/register', async (req, res) => {
     });
   } catch (e) {
     return res.json({
-      message: 'User already exists.',
+      message: "User already exists.",
     });
   }
 });
 
 // Login user
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = USERS.find((user) => user.email === email);
   const hashed_password = hashSync(password, salt);
 
   if (!user || user.hashed_password !== hashed_password) {
     return res.status(400).json({
-      message: 'Invalid credentials.',
+      message: "Invalid credentials.",
     });
   }
   // Create token for user
