@@ -5,8 +5,7 @@ import { genSaltSync, hashSync } from 'bcrypt';
 
 dotenv.config();
 
-const { PORT, STREAM_API_KEY, STREAM_API_SECRET } = process.env;
-const client = StreamChat.getInstance(STREAM_API_KEY!, STREAM_API_SECRET);
+const client = StreamChat.getInstance("2m874t2tj73j", "53aj5e4w4b2jrwnbymgjcny79xphweckpcbbz72mnqjxa37jvha29cvzc44pzqvw");
 
 const app = express();
 app.use(express.json());
@@ -102,6 +101,6 @@ app.post('/login', async (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+app.listen(3000, () => {
+  console.log(`App listening on port 3000`);
 });
